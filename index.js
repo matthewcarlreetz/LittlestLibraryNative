@@ -1,13 +1,29 @@
 /**
  * @format
  */
-
+import React from 'react';
 import { Navigation } from 'react-native-navigation';
 import LibraryMap from './components/home/LibraryMap.tsx';
 import LibraryList from './components/home/LibraryList.tsx';
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { createHttpLink } from 'apollo-link-http';
 
-Navigation.registerComponent('LibraryMap', () => LibraryMap);
-Navigation.registerComponent('List', () => LibraryList);
+const client = new ApolloClient({
+  link: createHttpLink({ uri: 'http://localhost:4000/graph' }),
+  cache: new InMemoryCache(),
+});
+
+const asdf = (Component) => () => (props) => (
+  <ApolloProvider client={client}>
+    <Component {...props} />
+  </ApolloProvider>
+);
+
+Navigation.registerComponent('LibraryMap', asdf(LibraryMap), () => LibraryMap);
+Navigation.registerComponent('LibraryList', asdf(LibraryList), () => LibraryList);
+
 Navigation.events().registerAppLaunchedListener(async () => {
   Navigation.setRoot({
     root: {
@@ -39,7 +55,7 @@ Navigation.events().registerAppLaunchedListener(async () => {
               children: [
                 {
                   component: {
-                    name: 'List',
+                    name: 'LibraryList',
                   },
                 },
               ],
