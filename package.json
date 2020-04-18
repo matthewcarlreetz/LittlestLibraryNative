@@ -16,6 +16,7 @@
         "graphql": "^15.0.0",
         "react": "16.11.0",
         "react-native": "0.62.2",
+        "react-native-fast-image": "^8.1.5",
         "react-native-navigation": "^6.4.0",
         "react-native-navigation-hooks": "^5.0.0",
         "react-native-paper": "^3.8.0",

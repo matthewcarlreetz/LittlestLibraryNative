@@ -3,8 +3,9 @@ import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIBRARIES, LibraryData, LibraryVars, Library } from '../../models/library';
 import { FlatList } from 'react-native';
-import { List, Divider, Avatar, useTheme } from 'react-native-paper';
+import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
+import FastImage from 'react-native-fast-image';
 
 const LibraryList = (): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
@@ -20,13 +21,15 @@ const LibraryList = (): JSX.Element => {
       <List.Item
         title={data.item.address}
         description="Item description"
-        left={(props): JSX.Element => (
-          <Avatar.Image
+        left={({ style, ...props }): JSX.Element => (
+          <FastImage
             {...props}
+            style={{ ...style, width: 80, height: 80, borderRadius: 40 }}
             source={{
-              uri:
-                'https://bloximages.chicago2.vip.townnews.com/auburnpub.com/content/tncms/assets/v3/editorial/5/80/580e1e82-e642-50f5-bd71-674207d79b2e/558d79d6d7ad7.image.jpg',
+              uri: data.item.thumbnail,
+              priority: FastImage.priority.normal,
             }}
+            resizeMode={FastImage.resizeMode.contain}
           />
         )}
       />
