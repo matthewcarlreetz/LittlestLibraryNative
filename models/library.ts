@@ -39,4 +39,21 @@ const GET_LIBRARIES = gql`
   }
 `;
 
-export { GET_LIBRARIES };
+const CREATE_LIBRARY = gql`
+  mutation createLibrary($file: Upload!, $latitude: Float!, $longitude: Float!) {
+    createLibrary(file: $file, latitude: $latitude, longitude: $longitude) {
+      id
+      address
+      city
+      state
+      zip
+      latitude
+      longitude
+      image
+      thumbnail
+      status
+    }
+  }
+`;
+
+export { GET_LIBRARIES, CREATE_LIBRARY };

@@ -311,8 +311,18 @@ PODS:
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.4.1)
+  - RNImageCropPicker (0.28.0):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.28.0)
+    - RSKImageCropper
+  - RNImageCropPicker/QBImagePickerController (0.28.0):
+    - React-Core
+    - React-RCTImage
+    - RSKImageCropper
   - RNVectorIcons (6.6.0):
     - React
+  - RSKImageCropper (2.2.3)
   - SDWebImage (5.7.2):
     - SDWebImage/Core (= 5.7.2)
   - SDWebImage/Core (5.7.2)
@@ -373,6 +383,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -390,6 +401,7 @@ SPEC REPOS:
     - FlipperKit
     - libwebp
     - OpenSSL-Universal
+    - RSKImageCropper
     - SDWebImage
     - SDWebImageWebPCoder
     - YogaKit
@@ -449,6 +461,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-navigation"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -494,7 +508,9 @@ SPEC CHECKSUMS:
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   ReactNativeNavigation: 667586f6924fbd09512e2933fe70497db914b758
   RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
+  RNImageCropPicker: cf129d17e042ce3e96fb9ada967c28f21f977c82
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
   Yoga: 3ebccbdd559724312790e7742142d062476b698e

@@ -6,6 +6,7 @@ import { FlatList } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
 
 const LibraryList = (): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
@@ -14,6 +15,11 @@ const LibraryList = (): JSX.Element => {
 
   useNavigationButtonPress((e) => {
     console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);
+    Navigation.showModal({
+      component: {
+        name: 'CreateLibrary',
+      },
+    });
   });
 
   const renderItem = (data: { item: Library }): JSX.Element => {
@@ -21,6 +27,14 @@ const LibraryList = (): JSX.Element => {
       <List.Item
         title={data.item.address}
         description="Item description"
+        onPress={
+          () => {}
+          // Navigation.push(this.props.componentId, {
+          //   component: {
+          //     name: 'Screen2',
+          //   },
+          // })
+        }
         left={({ style, ...props }): JSX.Element => (
           <FastImage
             {...props}
