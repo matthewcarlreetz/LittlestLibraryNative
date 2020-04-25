@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Dimensions, Image as ImageView } from 'react-native';
 import { Button } from 'react-native-paper';
-import ImagePicker from 'react-native-image-crop-picker';
+import { Image } from 'react-native-image-crop-picker';
 import { useMutation } from '@apollo/react-hooks';
-import { CREATE_LIBRARY, LibraryData, LibraryVars, Library } from '../../models/library';
+import { CREATE_LIBRARY, Library } from '../../models/library';
+import { ReactNativeFile } from 'apollo-absinthe-upload-link';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,38 +23,45 @@ const styles = StyleSheet.create({
   },
 });
 
-const image = { uri: 'https://reactjs.org/logo-og.png' };
+type CreateLibraryProps = {
+  image: Image;
+};
 
-const CreateLibrary = (): JSX.Element => {
-  const [createLibrary] = useMutation(CREATE_LIBRARY);
+const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
+  const [createLibrary, { error, data, loading }] = useMutation<
+    { library: Library },
+    { file: string; latitude: number; longitude: number }
+  >(CREATE_LIBRARY);
+
+  console.log({ error, data, loading });
 
   const win = Dimensions.get('window');
 
-  const captureImage = (): void => {
-    ImagePicker.openCamera({
-      width: 400,
-      height: 400,
-      cropping: true,
-    }).then(async (image) => {
-      console.log(image);
-      const response = await createLibrary({
-        variables: {
-          file: image,
-          latitude: 44.4,
-          longitude: -88.2,
-        },
-      });
-    });
-  };
-
   return (
     <View style={styles.container}>
-      <Button mode="contained" onPress={captureImage}>
-        Capture Library
+      <ImageView
+        source={{ uri: image.path, width: image.width, height: image.height }}
+        style={{ width: win.width, height: win.width, resizeMode: 'contain' }}
+      />
+      <Button
+        mode="contained"
+        onPress={(): void => {
+          createLibrary({
+            variables: {
+              file:
+                new ReactNativeFile({
+                  uri: image?.path,
+                  name: 'a.jpg',
+                  type: 'image/jpeg',
+                }) || '',
+              latitude: 44.4,
+              longitude: -88.2,
+            },
+          });
+        }}
+      >
+        Send it!
       </Button>
-      {/* <ImageBackground source={image} style={styles.image} imageStyle={{ width: win.width, height: win.width }}>
-        <Button style={styles.text}>Inside</Text>
-      </ImageBackground> */}
     </View>
   );
 };

@@ -7,6 +7,7 @@ import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const LibraryList = (): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
@@ -15,10 +16,23 @@ const LibraryList = (): JSX.Element => {
 
   useNavigationButtonPress((e) => {
     console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);
-    Navigation.showModal({
-      component: {
-        name: 'CreateLibrary',
-      },
+
+    ImagePicker.openCamera({
+      width: 1242,
+      height: 1242,
+      cropping: true,
+    }).then(async (image) => {
+      console.log(image);
+      if (image) {
+        Navigation.showModal({
+          component: {
+            name: 'CreateLibrary',
+            passProps: {
+              image,
+            },
+          },
+        });
+      }
     });
   });
 

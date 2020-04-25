@@ -9,12 +9,12 @@ import CreateLibrary from './components/create/CreateLibrary.tsx';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { createHttpLink } from 'apollo-link-http';
+import { createLink } from 'apollo-absinthe-upload-link';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const client = new ApolloClient({
-  link: createHttpLink({ uri: 'http://192.168.86.77:4000/graph' }),
+  link: createLink({ uri: 'http://192.168.86.77:4000/graph' }),
   cache: new InMemoryCache(),
 });
 
