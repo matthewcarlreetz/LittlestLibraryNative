@@ -12,6 +12,10 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { createLink } from 'apollo-absinthe-upload-link';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
+import Geocoder from 'react-native-geocoding';
+
+Geocoder.init(GOOGLE_LOCATION_API_KEY);
 
 const client = new ApolloClient({
   link: createLink({ uri: 'http://192.168.86.77:4000/graph' }),

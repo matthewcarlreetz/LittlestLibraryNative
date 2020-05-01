@@ -15,14 +15,11 @@ const LibraryList = (): JSX.Element => {
   });
 
   useNavigationButtonPress((e) => {
-    console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);
-
     ImagePicker.openCamera({
       width: 1242,
       height: 1242,
       cropping: true,
     }).then(async (image) => {
-      console.log(image);
       if (image) {
         Navigation.showModal({
           component: {
