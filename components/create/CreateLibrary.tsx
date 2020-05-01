@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { CREATE_LIBRARY, Library } from '../../models/library';
 import { ReactNativeFile } from 'apollo-absinthe-upload-link';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
+import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +43,7 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
 
   useEffect(() => {
     //reverse geocode
-    console.log('coords changed', coords);
+    console.log('coords changed', coords, GOOGLE_LOCATION_API_KEY);
   }, [coords]);
 
   useEffect(() => {
