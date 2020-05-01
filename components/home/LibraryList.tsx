@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_LIBRARIES, LibraryData, LibraryVars, Library } from '../../models/library';
+import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
 import { FlatList } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -10,9 +10,12 @@ import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
 
 const LibraryList = (): JSX.Element => {
-  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
-    variables: { latitude: 44.4, longitude: -88.2 },
-  });
+  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
+    GET_LIBRARIES,
+    {
+      variables: { latitude: 44.4, longitude: -88.2 },
+    },
+  );
 
   useNavigationButtonPress((e) => {
     ImagePicker.openCamera({
@@ -39,7 +42,7 @@ const LibraryList = (): JSX.Element => {
         title={data.item.address}
         description="Item description"
         onPress={
-          () => {}
+          (): void => {}
           // Navigation.push(this.props.componentId, {
           //   component: {
           //     name: 'Screen2',

@@ -17,7 +17,7 @@ export interface Library {
   status: string;
 }
 
-export interface LibraryVars {
+export interface GetLibrariesVars {
   longitude: number;
   latitude: number;
 }
@@ -40,8 +40,24 @@ const GET_LIBRARIES = gql`
 `;
 
 const CREATE_LIBRARY = gql`
-  mutation createLibrary($file: Upload!, $latitude: Float!, $longitude: Float!) {
-    createLibrary(file: $file, latitude: $latitude, longitude: $longitude) {
+  mutation createLibrary(
+    $file: Upload!
+    $latitude: Float!
+    $longitude: Float!
+    $address: String!
+    $city: String!
+    $state: String!
+    $zip: String!
+  ) {
+    createLibrary(
+      file: $file
+      latitude: $latitude
+      longitude: $longitude
+      address: $address
+      city: $city
+      state: $state
+      zip: $zip
+    ) {
       id
       address
       city
