@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
@@ -8,6 +8,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
+import requestLocationPermission from '../../utils/LocationPermission';
 
 const LibraryList = (): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
@@ -35,6 +36,12 @@ const LibraryList = (): JSX.Element => {
       }
     });
   });
+
+  useEffect(() => {
+    (async (): Promise<void> => {
+      await requestLocationPermission();
+    })();
+  }, []);
 
   const renderItem = (data: { item: Library }): JSX.Element => {
     return (
@@ -90,6 +97,7 @@ LibraryList.options = {
       {
         id: 'Add',
         systemItem: 'add',
+        text: 'Add',
       },
     ],
   },
