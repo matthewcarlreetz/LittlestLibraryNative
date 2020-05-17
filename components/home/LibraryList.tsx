@@ -10,7 +10,11 @@ import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
 import requestLocationPermission from '../../utils/LocationPermission';
 
-const LibraryList = (): JSX.Element => {
+type LibraryListScreenProps = {
+  componentId: string;
+};
+
+const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
     GET_LIBRARIES,
     {
@@ -48,14 +52,14 @@ const LibraryList = (): JSX.Element => {
       <List.Item
         title={data.item.address}
         description="Item description"
-        onPress={
-          (): void => {}
-          // Navigation.push(this.props.componentId, {
-          //   component: {
-          //     name: 'Screen2',
-          //   },
-          // })
-        }
+        onPress={(): void => {
+          Navigation.push(componentId, {
+            component: {
+              name: 'LibraryView',
+              passProps: { library: data.item },
+            },
+          });
+        }}
         left={({ style, ...props }): JSX.Element => (
           <FastImage
             {...props}

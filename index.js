@@ -6,6 +6,7 @@ import { Navigation } from 'react-native-navigation';
 import LibraryMap from './components/home/LibraryMap.tsx';
 import LibraryList from './components/home/LibraryList.tsx';
 import CreateLibrary from './components/create/CreateLibrary.tsx';
+import LibraryView from './components/view/LibraryView.tsx';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -45,6 +46,7 @@ const ViewWrapper = (Component) => () => (props) => (
 Navigation.registerComponent('LibraryMap', ViewWrapper(LibraryMap), () => LibraryMap);
 Navigation.registerComponent('LibraryList', ViewWrapper(LibraryList), () => LibraryList);
 Navigation.registerComponent('CreateLibrary', ViewWrapper(CreateLibrary), () => CreateLibrary);
+Navigation.registerComponent('LibraryView', ViewWrapper(LibraryView), () => LibraryView);
 
 Navigation.events().registerAppLaunchedListener(async () => {
   Navigation.setRoot({
