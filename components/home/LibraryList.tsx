@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
-import { FlatList } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
@@ -13,6 +13,8 @@ import requestLocationPermission from '../../utils/LocationPermission';
 type LibraryListScreenProps = {
   componentId: string;
 };
+
+const KM_TO_MILES = 0.621371;
 
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
@@ -51,15 +53,30 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
     return (
       <List.Item
         title={data.item.address}
-        description="Item description"
+        description={`${data.item.city}, ${data.item.state}`}
         onPress={(): void => {
           Navigation.push(componentId, {
             component: {
               name: 'LibraryView',
               passProps: { library: data.item },
+              options: {
+                bottomTabs: {
+                  visible: false,
+                },
+              },
             },
           });
         }}
+        right={(props): JSX.Element => (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}
+          >
+            <Text {...props}>{`${(data.item.distance * KM_TO_MILES).toFixed(1)} mi`}</Text>
+          </View>
+        )}
         left={({ style, ...props }): JSX.Element => (
           <FastImage
             {...props}

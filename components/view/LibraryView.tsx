@@ -1,27 +1,44 @@
 import React from 'react';
-import { View, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Dimensions, ScrollView } from 'react-native';
 import { Library } from 'models/library';
+import { Button } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 type ViewLibraryProps = {
   library: Library;
 };
 
-const ViewLibrary = ({ library: { image } }: ViewLibraryProps): JSX.Element => {
+const ViewLibrary = ({ library: { image, address, city, state } }: ViewLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, flexDirection: 'column' }}>
-        <FastImage source={{ uri: image }} style={{ width: win.width, height: win.width }} />
+    <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+      <FastImage source={{ uri: image }} style={{ width: win.width, height: win.width, marginBottom: 24 }} />
+
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>{address}</Text>
+        <Text>{`${city}, ${state}`}</Text>
       </View>
-    </ScrollView>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Button
+          style={{ width: '50%', alignSelf: 'center', justifyContent: 'center' }}
+          contentStyle={{ height: 60 }}
+          labelStyle={{ fontSize: 20, color: 'white' }}
+          mode="contained"
+          onPress={(): void => {
+            console.log('get directions!');
+          }}
+        >
+          Get Directions
+        </Button>
+      </View>
+    </View>
   );
 };
 
 ViewLibrary.options = {
   topBar: {
     title: {
-      text: 'Create Library',
+      text: '',
     },
   },
 };

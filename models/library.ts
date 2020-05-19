@@ -15,6 +15,7 @@ export interface Library {
   image: string;
   thumbnail: string;
   status: string;
+  distance: number;
 }
 
 export interface GetLibrariesVars {
@@ -35,6 +36,7 @@ const GET_LIBRARIES = gql`
       image
       thumbnail
       status
+      distance
     }
   }
 `;

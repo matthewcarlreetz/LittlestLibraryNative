@@ -23,7 +23,7 @@
         "react-native-geocoding": "^0.4.0",
         "react-native-geolocation-service": "^4.0.0",
         "react-native-image-crop-picker": "^0.28.0",
-        "react-native-navigation": "^6.4.0",
+        "react-native-navigation": "^6.6.2",
         "react-native-navigation-hooks": "^5.0.0",
         "react-native-paper": "^3.8.0",
         "react-native-safe-area-context": "^0.7.3",
