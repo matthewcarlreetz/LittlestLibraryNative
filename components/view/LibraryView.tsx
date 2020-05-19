@@ -1,13 +1,17 @@
 import React from 'react';
-import { View, Text, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { Library } from 'models/library';
 import { Button } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
+import OpenMap from 'react-native-open-map';
+
 type ViewLibraryProps = {
   library: Library;
 };
 
-const ViewLibrary = ({ library: { image, address, city, state } }: ViewLibraryProps): JSX.Element => {
+const ViewLibrary = ({
+  library: { image, address, city, state, latitude, longitude },
+}: ViewLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
 
   return (
@@ -25,7 +29,14 @@ const ViewLibrary = ({ library: { image, address, city, state } }: ViewLibraryPr
           labelStyle={{ fontSize: 20, color: 'white' }}
           mode="contained"
           onPress={(): void => {
-            console.log('get directions!');
+            OpenMap.show({
+              latitude,
+              longitude,
+              title: 'Littlest Library',
+              cancelText: 'Close',
+              actionSheetTitle: 'Chose app',
+              actionSheetMessage: 'Available applications ',
+            });
           }}
         >
           Get Directions
