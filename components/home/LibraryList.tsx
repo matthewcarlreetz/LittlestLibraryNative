@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
@@ -8,8 +8,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
-import requestLocationPermission from '../../utils/LocationPermission';
-import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
+import useLocation from '../../hooks/useLocation';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -18,17 +17,15 @@ type LibraryListScreenProps = {
 const KM_TO_MILES = 0.621371;
 
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
-  const [coords, setCoords] = useState<GeoCoordinates | null>(null);
-  const [hasLocationPermission, setHasLocationPermission] = useState<boolean>(false);
-
+  const coords = useLocation();
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
     GET_LIBRARIES,
     {
       variables: { latitude: coords?.latitude ?? 44.4, longitude: coords?.longitude ?? -88.2 },
     },
-  ); // TODO: Verify getting location works and create a custom hook
+  );
 
-  useNavigationButtonPress((e) => {
+  useNavigationButtonPress(() => {
     ImagePicker.openCamera({
       width: 1242,
       height: 1242,
@@ -46,30 +43,6 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
       }
     });
   });
-
-  useEffect(() => {
-    (async (): Promise<void> => {
-      const locationPermission = await requestLocationPermission();
-      setHasLocationPermission(locationPermission);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (!hasLocationPermission) return;
-
-    Geolocation.watchPosition(
-      (position) => {
-        setCoords(position.coords);
-      },
-      (error) => {
-        console.error(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-    );
-    return (): void => {
-      Geolocation.stopObserving();
-    };
-  }, [hasLocationPermission]);
 
   const renderItem = (data: { item: Library }): JSX.Element => {
     return (
