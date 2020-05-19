@@ -8,7 +8,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
-import useLocation from '../../hooks/useLocation';
+import { useLocationProvider } from '../../hooks/useLocation';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -17,7 +17,7 @@ type LibraryListScreenProps = {
 const KM_TO_MILES = 0.621371;
 
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
-  const coords = useLocation();
+  const coords = useLocationProvider();
   const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
     GET_LIBRARIES,
     {

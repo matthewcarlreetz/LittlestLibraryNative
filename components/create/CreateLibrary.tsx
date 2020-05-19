@@ -5,11 +5,11 @@ import { Image } from 'react-native-image-crop-picker';
 import { useMutation } from '@apollo/react-hooks';
 import { CREATE_LIBRARY, Library } from '../../models/library';
 import { ReactNativeFile } from 'apollo-absinthe-upload-link';
-import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import GoogleAddressParser, { Address } from '../../utils/GoogleAddressParser';
 import OkDialog from '../common/OkDialog';
 import { Navigation } from 'react-native-navigation';
+import { useLocationProvider } from '../../hooks/useLocation';
 
 type CreateLibraryProps = {
   image: Image;
@@ -17,13 +17,12 @@ type CreateLibraryProps = {
 
 const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
-
+  const coords = useLocationProvider();
   const [createLibrary, { error, data, loading }] = useMutation<
     { library: Library },
     { file: string; longitude: number; latitude: number; address: string; city: string; state: string; zip: string }
   >(CREATE_LIBRARY);
 
-  const [coords, setCoords] = useState<GeoCoordinates | null>(null);
   const [address, setAddress] = useState<Address | null>(null);
   const [dialogIsShowing, setDialogIsShowing] = useState<boolean>(false);
 
@@ -35,6 +34,7 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
 
   useEffect(() => {
     //reverse geocode
+    console.log({ coords });
     if (coords != null) {
       Geocoder.from(coords.latitude, coords.longitude)
         .then((json) => {
@@ -44,21 +44,6 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
         .catch((error) => console.warn(error));
     }
   }, [coords]);
-
-  useEffect(() => {
-    Geolocation.watchPosition(
-      (position) => {
-        setCoords(position.coords);
-      },
-      (error) => {
-        console.error(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-    );
-    return (): void => {
-      Geolocation.stopObserving();
-    };
-  }, []);
 
   return (
     <ScrollView>

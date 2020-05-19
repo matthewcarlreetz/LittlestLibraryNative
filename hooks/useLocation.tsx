@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext, useContext } from 'react';
 import requestLocationPermission from '../utils/LocationPermission';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 
-export default (): GeoCoordinates | null => {
+const useLocation = (): GeoCoordinates | null => {
   const [coords, setCoords] = useState<GeoCoordinates | null>(null);
   const [hasLocationPermission, setHasLocationPermission] = useState<boolean>(false);
 
@@ -16,7 +16,7 @@ export default (): GeoCoordinates | null => {
   useEffect(() => {
     if (!hasLocationPermission) return;
 
-    Geolocation.watchPosition(
+    Geolocation.getCurrentPosition(
       (position) => {
         setCoords(position.coords);
       },
@@ -31,3 +31,24 @@ export default (): GeoCoordinates | null => {
   }, [hasLocationPermission]);
   return coords;
 };
+
+type LocationProviderProps = {
+  children: React.ReactNode;
+};
+
+const LocationContext = createContext<GeoCoordinates | null>(null);
+
+const useLocationProvider = (): GeoCoordinates | null => {
+  const context = useContext(LocationContext);
+  if (context === undefined) {
+    throw new Error('useLocationProvider must be used within a LocationProvider');
+  }
+  return context;
+};
+
+const LocationProvider = ({ children }: LocationProviderProps): JSX.Element => {
+  const provideLocation = useLocation();
+  return <LocationContext.Provider value={provideLocation}>{children}</LocationContext.Provider>;
+};
+
+export { LocationProvider, useLocationProvider };
