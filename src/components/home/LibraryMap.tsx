@@ -1,8 +1,7 @@
 import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_LIBRARIES, LibraryData, LibraryVars } from '../../models/library';
+import useGetLibraries from '../../hooks/useGetLibraries';
 
 type LibraryMapScreenProps = {
   componentId: string;
@@ -11,9 +10,7 @@ type LibraryMapScreenProps = {
 // Leaving this here for future reference
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LibraryMapScreen = ({ componentId }: LibraryMapScreenProps): JSX.Element => {
-  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
-    variables: { latitude: 44.4, longitude: -88.2 },
-  });
+  const { libraries } = useGetLibraries();
 
   useNavigationButtonPress((e) => {
     console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);
@@ -22,7 +19,7 @@ const LibraryMapScreen = ({ componentId }: LibraryMapScreenProps): JSX.Element =
   return (
     <SafeAreaView>
       <Text>Map</Text>
-      {nearbyLibraries.map((l) => {
+      {libraries.map((l) => {
         return <Text key={l.id}>{l.address}</Text>;
       })}
     </SafeAreaView>

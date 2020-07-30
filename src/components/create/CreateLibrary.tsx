@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, Dimensions, Image as ImageView, ScrollView } from 'react-native';
 import { Button, TextInput, ProgressBar } from 'react-native-paper';
 import { Image } from 'react-native-image-crop-picker';
-import { useMutation } from '@apollo/react-hooks';
-import { CREATE_LIBRARY, Library } from '../../models/library';
-import { ReactNativeFile } from 'apollo-absinthe-upload-link';
 import Geocoder from 'react-native-geocoding';
 import GoogleAddressParser, { Address } from '../../utils/GoogleAddressParser';
 import OkDialog from '../common/OkDialog';
 import { Navigation } from 'react-native-navigation';
 import { useLocationProvider } from '../../hooks/useLocation';
+import useCreateLibrary from '../../hooks/useCreateLibrary';
 
 type CreateLibraryProps = {
   image: Image;
@@ -18,19 +16,15 @@ type CreateLibraryProps = {
 const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
   const coords = useLocationProvider();
-  const [createLibrary, { error, data, loading }] = useMutation<
-    { library: Library },
-    { file: string; longitude: number; latitude: number; address: string; city: string; state: string; zip: string }
-  >(CREATE_LIBRARY);
-
+  const { createLib, loading, error } = useCreateLibrary();
   const [address, setAddress] = useState<Address | null>(null);
   const [dialogIsShowing, setDialogIsShowing] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (data || error) {
-      setDialogIsShowing((prev) => (!prev ? true : prev));
-    }
-  }, [data, error]);
+  // useEffect(() => {
+  //   if (data || error) {
+  //     setDialogIsShowing((prev) => (!prev ? true : prev));
+  //   }
+  // }, [data, error]);
 
   useEffect(() => {
     //reverse geocode
@@ -52,9 +46,7 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
           visible={dialogIsShowing}
           title={error ? 'Epic Failure' : 'Great Success'}
           body={
-            error
-              ? `Please try again later.\n\n${error.message}`
-              : "We've received this library and will be reviewing it soon. Thanks!"
+            error ? `Please try again later.\n\n` : "We've received this library and will be reviewing it soon. Thanks!"
           }
           onDismiss={(): void => {
             Navigation.dismissAllModals();
@@ -91,22 +83,23 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
           onPress={(): void => {
             // TODO: file upload doesn't work on Android emulator, need to try on real device
             if (coords != null && address != null) {
-              createLibrary({
-                variables: {
-                  file:
-                    new ReactNativeFile({
-                      uri: image?.path,
-                      name: 'a.jpg',
-                      type: 'image/jpeg',
-                    }) || '',
-                  latitude: coords.latitude,
-                  longitude: coords.longitude,
-                  address: address.address,
-                  city: address.city,
-                  state: address.state,
-                  zip: address.zip,
-                },
-              });
+              console.log('SEND IT!');
+              // createLibrary({
+              //   variables: {
+              //     file:
+              //       new ReactNativeFile({
+              //         uri: image?.path,
+              //         name: 'a.jpg',
+              //         type: 'image/jpeg',
+              //       }) || '',
+              //     latitude: coords.latitude,
+              //     longitude: coords.longitude,
+              //     address: address.address,
+              //     city: address.city,
+              //     state: address.state,
+              //     zip: address.zip,
+              //   },
+              // });
             }
           }}
         >

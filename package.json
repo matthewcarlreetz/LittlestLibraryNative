@@ -10,13 +10,8 @@
         "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
     },
     "dependencies": {
-        "@apollo/react-hooks": "^3.1.4",
         "@react-native-community/netinfo": "^5.9.5",
         "amazon-cognito-identity-js": "^4.3.3",
-        "apollo-absinthe-upload-link": "^1.5.0",
-        "apollo-boost": "^0.4.7",
-        "apollo-client": "^2.6.8",
-        "apollo-upload-client": "^13.0.0",
         "aws-amplify": "^3.0.22",
         "aws-amplify-react-native": "^4.2.3",
         "graphql": "^15.0.0",
@@ -30,9 +25,9 @@
         "react-native-navigation": "^6.6.2",
         "react-native-navigation-hooks": "^5.0.0",
         "react-native-open-map": "^3.0.2",
-        "react-native-paper": "^3.8.0",
+        "react-native-paper": "4.0.0-alpha.1",
         "react-native-safe-area-context": "^0.7.3",
-        "react-native-vector-icons": "^6.7.0"
+        "react-native-vector-icons": "6.6.0"
     },
     "devDependencies": {
         "@babel/core": "^7.6.2",

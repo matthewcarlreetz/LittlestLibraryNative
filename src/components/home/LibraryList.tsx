@@ -1,7 +1,5 @@
 import React from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
 import { FlatList, Text, View } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
@@ -9,6 +7,7 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useLocationProvider } from '../../hooks/useLocation';
+import useGetLibraries from '../../hooks/useGetLibraries';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -18,12 +17,7 @@ const KM_TO_MILES = 0.621371;
 
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const coords = useLocationProvider();
-  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
-    GET_LIBRARIES,
-    {
-      variables: { latitude: coords?.latitude ?? 44.4, longitude: coords?.longitude ?? -88.2 },
-    },
-  );
+  const { libraries } = useGetLibraries();
 
   useNavigationButtonPress(() => {
     ImagePicker.openCamera({
@@ -99,7 +93,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
       ItemSeparatorComponent={Divider}
       renderItem={renderItem}
       keyExtractor={(library: Library): string => library.id.toString()}
-      data={nearbyLibraries}
+      data={libraries}
     />
   );
 };

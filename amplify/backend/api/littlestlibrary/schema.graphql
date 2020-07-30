@@ -1,0 +1,17 @@
+type Library @model {
+  id: ID!
+  address: String!
+  city: String!
+  state: String!
+  zip: String!
+  latitude: Float!
+  longitude: Float!
+  avatar: String
+  status: LibraryStatus!
+}
+
+enum LibraryStatus {
+  ACTIVE
+  NEW
+  DECLINED
+}
