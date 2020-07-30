@@ -1,26 +1,77 @@
 import React from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { useQuery } from '@apollo/react-hooks';
-import { GET_LIBRARIES, LibraryData, LibraryVars, Library } from '../../models/library';
-import { FlatList } from 'react-native';
+import { GET_LIBRARIES, LibraryData, GetLibrariesVars, Library } from '../../models/library';
+import { FlatList, Text, View } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
 import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
+import ImagePicker from 'react-native-image-crop-picker';
+import { useLocationProvider } from '../../hooks/useLocation';
 
-const LibraryList = (): JSX.Element => {
-  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, LibraryVars>(GET_LIBRARIES, {
-    variables: { latitude: 44.4, longitude: -88.2 },
-  });
+type LibraryListScreenProps = {
+  componentId: string;
+};
 
-  useNavigationButtonPress((e) => {
-    console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);
+const KM_TO_MILES = 0.621371;
+
+const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
+  const coords = useLocationProvider();
+  const { data: { nearbyLibraries } = { nearbyLibraries: [] } } = useQuery<LibraryData, GetLibrariesVars>(
+    GET_LIBRARIES,
+    {
+      variables: { latitude: coords?.latitude ?? 44.4, longitude: coords?.longitude ?? -88.2 },
+    },
+  );
+
+  useNavigationButtonPress(() => {
+    ImagePicker.openCamera({
+      width: 1242,
+      height: 1242,
+      cropping: true,
+    }).then(async (image) => {
+      if (image) {
+        Navigation.showModal({
+          component: {
+            name: 'CreateLibrary',
+            passProps: {
+              image,
+            },
+          },
+        });
+      }
+    });
   });
 
   const renderItem = (data: { item: Library }): JSX.Element => {
     return (
       <List.Item
         title={data.item.address}
-        description="Item description"
+        description={`${data.item.city}, ${data.item.state}`}
+        onPress={(): void => {
+          Navigation.push(componentId, {
+            component: {
+              name: 'LibraryView',
+              passProps: { library: data.item },
+              options: {
+                bottomTabs: {
+                  visible: false,
+                },
+              },
+            },
+          });
+        }}
+        right={(props): JSX.Element => (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'flex-end',
+            }}
+          >
+            <Text {...props}>{`${(data.item.distance * KM_TO_MILES).toFixed(1)} mi`}</Text>
+          </View>
+        )}
         left={({ style, ...props }): JSX.Element => (
           <FastImage
             {...props}
@@ -62,6 +113,7 @@ LibraryList.options = {
       {
         id: 'Add',
         systemItem: 'add',
+        text: 'Add',
       },
     ],
   },

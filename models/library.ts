@@ -15,9 +15,10 @@ export interface Library {
   image: string;
   thumbnail: string;
   status: string;
+  distance: number;
 }
 
-export interface LibraryVars {
+export interface GetLibrariesVars {
   longitude: number;
   latitude: number;
 }
@@ -35,8 +36,42 @@ const GET_LIBRARIES = gql`
       image
       thumbnail
       status
+      distance
     }
   }
 `;
 
-export { GET_LIBRARIES };
+const CREATE_LIBRARY = gql`
+  mutation createLibrary(
+    $file: Upload!
+    $latitude: Float!
+    $longitude: Float!
+    $address: String!
+    $city: String!
+    $state: String!
+    $zip: String!
+  ) {
+    createLibrary(
+      file: $file
+      latitude: $latitude
+      longitude: $longitude
+      address: $address
+      city: $city
+      state: $state
+      zip: $zip
+    ) {
+      id
+      address
+      city
+      state
+      zip
+      latitude
+      longitude
+      image
+      thumbnail
+      status
+    }
+  }
+`;
+
+export { GET_LIBRARIES, CREATE_LIBRARY };
