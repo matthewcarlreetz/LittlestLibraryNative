@@ -16,6 +16,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
 import Geocoder from 'react-native-geocoding';
 import { LocationProvider } from './hooks/useLocation';
+import Amplify from 'aws-amplify';
+import config from './aws-exports';
+
+Amplify.configure(config);
+
 Geocoder.init(GOOGLE_LOCATION_API_KEY);
 
 const client = new ApolloClient({
