@@ -8,6 +8,7 @@ import OkDialog from '../common/OkDialog';
 import { Navigation } from 'react-native-navigation';
 import { useLocationProvider } from '../../hooks/useLocation';
 import useCreateLibrary from '../../hooks/useCreateLibrary';
+import { Library, LibraryStatus } from '../../models/';
 
 type CreateLibraryProps = {
   image: Image;
@@ -16,15 +17,15 @@ type CreateLibraryProps = {
 const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
   const coords = useLocationProvider();
-  const { createLib, loading, error } = useCreateLibrary();
+  const { createLib, loading, error, finished } = useCreateLibrary();
   const [address, setAddress] = useState<Address | null>(null);
   const [dialogIsShowing, setDialogIsShowing] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (data || error) {
-  //     setDialogIsShowing((prev) => (!prev ? true : prev));
-  //   }
-  // }, [data, error]);
+  useEffect(() => {
+    if (finished) {
+      setDialogIsShowing(true);
+    }
+  }, [finished]);
 
   useEffect(() => {
     //reverse geocode
@@ -45,9 +46,7 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
         <OkDialog
           visible={dialogIsShowing}
           title={error ? 'Epic Failure' : 'Great Success'}
-          body={
-            error ? `Please try again later.\n\n` : "We've received this library and will be reviewing it soon. Thanks!"
-          }
+          body={error ? `Please try again later.\n\n` : "We've received this library and will review it soon. Thanks!"}
           onDismiss={(): void => {
             Navigation.dismissAllModals();
           }}
@@ -81,9 +80,19 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
           disabled={!address || loading}
           mode="contained"
           onPress={(): void => {
-            // TODO: file upload doesn't work on Android emulator, need to try on real device
             if (coords != null && address != null) {
               console.log('SEND IT!');
+              const lib = new Library({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+                address: address.address,
+                city: address.city,
+                state: address.state,
+                zip: address.zip,
+                status: LibraryStatus.NEW,
+              });
+
+              createLib(lib);
               // createLibrary({
               //   variables: {
               //     file:

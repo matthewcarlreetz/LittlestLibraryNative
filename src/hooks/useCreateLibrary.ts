@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { DataStore } from '@aws-amplify/datastore';
 import { Library } from '../models';
+import usePrevious from './usePrevious';
 
 const useCreateLibrary = () => {
   const [library, setLibrary] = useState<Library | null>(null);
+  const prevLibrary = usePrevious(library);
 
   const createLib = async (lib: Library) => {
     setLibrary(lib);
@@ -19,7 +21,7 @@ const useCreateLibrary = () => {
     createLibrary();
   }, [library]);
 
-  return { createLib, loading: !!library, error: false };
+  return { createLib, loading: !!library, error: false, finished: !!prevLibrary && !library };
 };
 
 export default useCreateLibrary;
