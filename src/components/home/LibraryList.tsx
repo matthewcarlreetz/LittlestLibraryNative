@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { FlatList, Text, View } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
@@ -8,6 +8,8 @@ import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
 import { useLocationProvider } from '../../hooks/useLocation';
 import useGetLibraries from '../../hooks/useGetLibraries';
+import { Library } from '../../models';
+import haversine from '../../utils/haversine';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -15,9 +17,22 @@ type LibraryListScreenProps = {
 
 const KM_TO_MILES = 0.621371;
 
+type LibraryWithDistance = Library & { distance: number };
+
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const coords = useLocationProvider();
   const { libraries } = useGetLibraries();
+  const [librariesWithDist, setLibrariesWithDist] = useState<LibraryWithDistance[]>([]);
+
+  useEffect(() => {
+    if (!coords) return;
+
+    const withDist = libraries.map((l) => {
+      const distance = haversine(l.latitude, l.longitude, coords.latitude, coords.longitude);
+      return { ...l, distance };
+    });
+    setLibrariesWithDist(withDist);
+  }, [coords, libraries]);
 
   useNavigationButtonPress(() => {
     ImagePicker.openCamera({
@@ -38,7 +53,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
     });
   });
 
-  const renderItem = (data: { item: Library }): JSX.Element => {
+  const renderItem = (data: { item: LibraryWithDistance }): JSX.Element => {
     return (
       <List.Item
         title={data.item.address}
@@ -93,7 +108,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
       ItemSeparatorComponent={Divider}
       renderItem={renderItem}
       keyExtractor={(library: Library): string => library.id.toString()}
-      data={libraries}
+      data={librariesWithDist}
     />
   );
 };
