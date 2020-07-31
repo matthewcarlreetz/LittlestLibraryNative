@@ -16,5 +16,18 @@
 				}
 			}
 		}
+	},
+	"auth": {
+		"littlestlibraryedebf7de": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
+	"storage": {
+		"library": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

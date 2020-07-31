@@ -10,6 +10,11 @@
             "StackName": "amplify-littlestlibrary-dev-134545",
             "StackId": "arn:aws:cloudformation:us-east-1:226346817566:stack/amplify-littlestlibrary-dev-134545/e2187d70-d294-11ea-b064-12602f672e4f",
             "AmplifyAppId": "d3c8lw3z897hh9"
+        },
+        "categories": {
+            "auth": {
+                "littlestlibraryedebf7de": {}
+            }
         }
     }
 }

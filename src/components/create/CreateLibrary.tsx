@@ -9,6 +9,7 @@ import { Navigation } from 'react-native-navigation';
 import { useLocationProvider } from '../../hooks/useLocation';
 import useCreateLibrary from '../../hooks/useCreateLibrary';
 import { Library, LibraryStatus } from '../../models/';
+import { uploadToStorage } from '../../utils/Images';
 
 type CreateLibraryProps = {
   image: Image;
@@ -93,22 +94,10 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
               });
 
               createLib(lib);
-              // createLibrary({
-              //   variables: {
-              //     file:
-              //       new ReactNativeFile({
-              //         uri: image?.path,
-              //         name: 'a.jpg',
-              //         type: 'image/jpeg',
-              //       }) || '',
-              //     latitude: coords.latitude,
-              //     longitude: coords.longitude,
-              //     address: address.address,
-              //     city: address.city,
-              //     state: address.state,
-              //     zip: address.zip,
-              //   },
-              // });
+
+              // TODO: User must be logged in to upload.
+              // TODO: Generate identifier and store on library
+              uploadToStorage('asdf', image.path);
             }
           }}
         >
