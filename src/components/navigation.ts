@@ -1,39 +1,34 @@
 import { Navigation } from 'react-native-navigation';
 
+export const goBack = (componentId: string) => Navigation.pop(componentId);
+
 export const goToAuth = () =>
   Navigation.setRoot({
     root: {
-      bottomTabs: {
-        id: 'BottomTabsId',
+      stack: {
+        id: 'Home.Stack',
+        options: {
+          topBar: { visible: false },
+        },
         children: [
           {
             component: {
-              name: 'SignIn',
-              options: {
-                bottomTab: {
-                  fontSize: 12,
-                  text: 'Sign In',
-                  // icon: require('./signin.png'),
-                },
-              },
-            },
-          },
-          {
-            component: {
-              name: 'SignUp',
-              options: {
-                bottomTab: {
-                  text: 'Sign Up',
-                  fontSize: 12,
-                  // icon: require('./signup.png'),
-                },
-              },
+              name: 'Login',
             },
           },
         ],
       },
     },
   });
+
+//TODO: Create shared element transition
+export const goToSignUp = (componentId: string) => {
+  Navigation.push(componentId, {
+    component: {
+      name: 'SignUp',
+    },
+  });
+};
 
 const HomeTabs = {
   bottomTabs: {

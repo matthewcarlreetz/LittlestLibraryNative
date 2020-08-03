@@ -7,6 +7,7 @@ import LibraryView from './src/components/view/LibraryView.tsx';
 import Intializing from './src/components/Initializing.tsx';
 import SignUp from './src/components/auth/SignUp.tsx';
 import SignIn from './src/components/auth/SignIn.tsx';
+import Login from './src/components/auth/Login.tsx';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
@@ -46,6 +47,7 @@ Navigation.registerComponent('LibraryView', ViewWrapper(LibraryView), () => Libr
 Navigation.registerComponent('Initializing', ViewWrapper(Intializing), () => Intializing);
 Navigation.registerComponent('SignIn', ViewWrapper(SignIn), () => SignIn);
 Navigation.registerComponent('SignUp', ViewWrapper(SignUp), () => SignUp);
+Navigation.registerComponent('Login', ViewWrapper(Login), () => Login);
 
 Navigation.events().registerAppLaunchedListener(async () => {
   Navigation.setRoot({
