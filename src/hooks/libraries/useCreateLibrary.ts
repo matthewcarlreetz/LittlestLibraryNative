@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DataStore } from '@aws-amplify/datastore';
-import { Library } from '../models';
-import usePrevious from './usePrevious';
+import { Library } from '../../models';
+import usePrevious from '../utils/usePrevious';
 
 const useCreateLibrary = () => {
   const [library, setLibrary] = useState<Library | null>(null);

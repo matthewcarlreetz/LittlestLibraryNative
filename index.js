@@ -8,7 +8,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
 import Geocoder from 'react-native-geocoding';
-import { LocationProvider } from './src/hooks/useLocation';
+import { LocationProvider } from './src/hooks/utils/useLocation';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
 

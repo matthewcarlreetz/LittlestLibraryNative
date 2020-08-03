@@ -6,8 +6,8 @@ import Geocoder from 'react-native-geocoding';
 import GoogleAddressParser, { Address } from '../../utils/GoogleAddressParser';
 import OkDialog from '../common/OkDialog';
 import { Navigation } from 'react-native-navigation';
-import { useLocationProvider } from '../../hooks/useLocation';
-import useCreateLibrary from '../../hooks/useCreateLibrary';
+import { useLocationProvider } from '../../hooks/utils/useLocation';
+import useCreateLibrary from '../../hooks/libraries/useCreateLibrary';
 import { Library, LibraryStatus } from '../../models/';
 import { uploadToStorage } from '../../utils/Images';
 

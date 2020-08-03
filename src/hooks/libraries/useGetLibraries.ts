@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { DataStore } from "@aws-amplify/datastore";
-import { Library } from "../models";
+import { useEffect, useState } from 'react';
+import { DataStore } from '@aws-amplify/datastore';
+import { Library } from '../../models';
 
 const useGetLibraries = () => {
   const [libraries, setLibraries] = useState<Library[]>([]);
@@ -8,13 +8,13 @@ const useGetLibraries = () => {
   useEffect(() => {
     async function getLibraries() {
       const libs = await DataStore.query(Library);
-      console.log("QUERY_LIBRARIES_RESULT", libs);
+      console.log('QUERY_LIBRARIES_RESULT', libs);
       setLibraries(libs);
     }
     getLibraries();
   }, []);
 
-  return { libraries }
+  return { libraries };
 };
 
 export default useGetLibraries;

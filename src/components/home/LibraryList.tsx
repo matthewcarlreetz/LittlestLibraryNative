@@ -6,8 +6,8 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
-import { useLocationProvider } from '../../hooks/useLocation';
-import useGetLibraries from '../../hooks/useGetLibraries';
+import { useLocationProvider } from '../../hooks/utils/useLocation';
+import useGetLibraries from '../../hooks/libraries/useGetLibraries';
 import { Library } from '../../models';
 import haversine from '../../utils/haversine';
 

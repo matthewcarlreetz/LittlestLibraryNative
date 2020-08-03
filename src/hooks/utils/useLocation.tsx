@@ -1,5 +1,5 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
-import requestLocationPermission from '../utils/LocationPermission';
+import requestLocationPermission from '../../utils/LocationPermission';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 
 const useLocation = (): GeoCoordinates | null => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
-import useGetLibraries from '../../hooks/useGetLibraries';
+import useGetLibraries from '../../hooks/libraries/useGetLibraries';
 
 type LibraryMapScreenProps = {
   componentId: string;
