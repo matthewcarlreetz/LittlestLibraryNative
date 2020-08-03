@@ -1,13 +1,19 @@
 import { Auth } from 'aws-amplify';
 import { useEffect, useReducer } from 'react';
-import { ISignUpResult } from 'amazon-cognito-identity-js';
+import { CognitoUser } from 'amazon-cognito-identity-js';
 
 type UserInfo = { username: string; password: string };
-type State = UserInfo & { error: string; data: ISignUpResult | null; loading: boolean; type: 'signIn' | 'signUp' };
+type State = UserInfo & {
+  error: string;
+  user: CognitoUser | null | undefined;
+  loading: boolean;
+  type: 'signIn' | 'signUp';
+};
 type Action =
   | { type: 'signUp'; payload: UserInfo }
   | { type: 'signIn'; payload: UserInfo }
-  | { type: 'success'; payload: ISignUpResult }
+  | { type: 'success'; payload: CognitoUser }
+  | { type: 'setUser'; payload: CognitoUser | null }
   | { type: 'failure'; payload: string };
 
 const useAuth = () => {
@@ -15,24 +21,26 @@ const useAuth = () => {
     switch (action.type) {
       case 'signUp':
         return {
+          ...state,
           username: action.payload.username,
           password: action.payload.password,
           error: '',
-          data: null,
           loading: true,
           type: 'signUp',
         };
       case 'signIn':
         return {
+          ...state,
           username: action.payload.username,
           password: action.payload.password,
           error: '',
-          data: null,
           loading: true,
           type: 'signUp',
         };
+      case 'setUser':
+        return { ...state, user: action.payload };
       case 'success':
-        return { ...state, data: action.payload, loading: false };
+        return { ...state, user: action.payload, loading: false };
       case 'failure':
         return { ...state, error: action.payload, loading: false };
     }
@@ -42,7 +50,7 @@ const useAuth = () => {
     username: '',
     password: '',
     error: '',
-    data: null,
+    user: undefined,
     loading: false,
     type: 'signIn',
   });
@@ -57,7 +65,6 @@ const useAuth = () => {
   useEffect(() => {
     async function signUp() {
       if (!state.loading) return;
-
       try {
         const op = state.type === 'signIn' ? Auth.signIn : Auth.signUp;
         const user = await op({
@@ -73,6 +80,18 @@ const useAuth = () => {
     }
     signUp();
   }, [state.loading]);
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        dispatch({ type: 'setUser', payload: user });
+      } catch (error) {
+        dispatch({ type: 'setUser', payload: null });
+      }
+    }
+    getUser();
+  }, []);
 
   return { signUp, signIn, ...state };
 };
