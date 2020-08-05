@@ -10,6 +10,7 @@ import { emailValidator, passwordValidator } from '../../utils/validators';
 import { useTheme } from 'react-native-paper';
 import { goBack } from '../navigation';
 import useAuth from '../../hooks/auth/useAuth';
+import SignupConfirmation from './SignupConfirmation';
 
 type Props = {
   componentId: string;
@@ -19,9 +20,7 @@ const SignUp = ({ componentId }: Props): JSX.Element => {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
-  const { signUp, ...theRest } = useAuth();
-
-  console.log({ theRest });
+  const { signUp, user, reset } = useAuth();
 
   const onSignUpPressed = () => {
     const emailError = emailValidator(email.value);
@@ -56,6 +55,8 @@ const SignUp = ({ componentId }: Props): JSX.Element => {
 
   return (
     <Background>
+      <SignupConfirmation email={email.value} onCancel={reset} visible={!!user} />
+
       <BackButton goBack={() => goBack(componentId)} />
 
       <Logo nativeID="logoSignup" />

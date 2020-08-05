@@ -3,21 +3,37 @@ import { useEffect, useReducer } from 'react';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 
 type UserInfo = { username: string; password: string };
+enum AuthType {
+  SignIn,
+  SignUp,
+}
 type State = UserInfo & {
   error: unknown;
   user: CognitoUser | null | undefined;
   loading: boolean;
-  type: 'signIn' | 'signUp';
+  type: AuthType;
 };
 type Action =
   | { type: 'signUp'; payload: UserInfo }
   | { type: 'signIn'; payload: UserInfo }
   | { type: 'success'; payload: CognitoUser }
   | { type: 'setUser'; payload: CognitoUser | null }
+  | { type: 'reset'; payload: null }
   | { type: 'failure'; payload: string };
+
+const initialState = {
+  username: '',
+  password: '',
+  error: '',
+  user: undefined,
+  loading: false,
+  type: AuthType.SignIn,
+};
 
 const useAuth = () => {
   function reducer(state: State, action: Action): State {
+    console.log({ action });
+    console.log({ state });
     switch (action.type) {
       case 'signUp':
         return {
@@ -26,7 +42,7 @@ const useAuth = () => {
           password: action.payload.password,
           error: '',
           loading: true,
-          type: 'signUp',
+          type: AuthType.SignUp,
         };
       case 'signIn':
         return {
@@ -35,7 +51,7 @@ const useAuth = () => {
           password: action.payload.password,
           error: '',
           loading: true,
-          type: 'signIn',
+          type: AuthType.SignIn,
         };
       case 'setUser':
         return { ...state, user: action.payload };
@@ -43,17 +59,12 @@ const useAuth = () => {
         return { ...state, user: action.payload, loading: false };
       case 'failure':
         return { ...state, error: action.payload, loading: false };
+      case 'reset':
+        return initialState;
     }
   }
 
-  const [state, dispatch] = useReducer(reducer, {
-    username: '',
-    password: '',
-    error: '',
-    user: undefined,
-    loading: false,
-    type: 'signIn',
-  });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const signIn = (username: string, password: string) => {
     dispatch({ type: 'signIn', payload: { username, password } });
@@ -61,12 +72,15 @@ const useAuth = () => {
   const signUp = (username: string, password: string) => {
     dispatch({ type: 'signUp', payload: { username, password } });
   };
+  const reset = () => {
+    dispatch({ type: 'reset', payload: null });
+  };
 
   useEffect(() => {
     async function signUp() {
       if (!state.loading) return;
       try {
-        if (state.type === 'signUp') {
+        if (state.type === AuthType.SignUp) {
           const response = await Auth.signUp({
             username: state.username,
             password: state.password,
@@ -140,6 +154,7 @@ const useAuth = () => {
     needsConfirmation,
     resendConfirmationCode,
     confirmSignUp,
+    reset,
   };
 };
 

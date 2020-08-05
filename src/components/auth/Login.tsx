@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import Background from '../common/Background';
 import Logo from '../common/Logo';
@@ -7,9 +7,10 @@ import Button from '../common/Button';
 import TextInput from '../common/TextInput';
 import { emailValidator, passwordValidator } from '../../utils/validators';
 import { useTheme } from 'react-native-paper';
-import { goToSignUp } from '../navigation';
+import { goToSignUp, goHome } from '../navigation';
 import useAuth from '../../hooks/auth/useAuth';
 import SignupConfirmation from './SignupConfirmation';
+
 type Props = {
   componentId: string;
 };
@@ -35,9 +36,7 @@ const Login = ({ componentId }: Props): JSX.Element => {
     },
   });
 
-  const { signIn, needsConfirmation, ...theRest } = useAuth();
-
-  console.log({ theRest });
+  const { signIn, needsConfirmation, reset, loading, user } = useAuth();
 
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
@@ -55,9 +54,15 @@ const Login = ({ componentId }: Props): JSX.Element => {
     signIn(email.value, password.value);
   };
 
+  useEffect(() => {
+    if (user) {
+      goHome();
+    }
+  }, [user]);
+
   return (
     <Background>
-      <SignupConfirmation email={email.value} visible={needsConfirmation} />
+      <SignupConfirmation email={email.value} visible={needsConfirmation} onCancel={reset} />
 
       <Logo nativeID="logoLogin" />
 
@@ -92,7 +97,11 @@ const Login = ({ componentId }: Props): JSX.Element => {
         </TouchableOpacity>
       </View>
 
-      <Button mode="contained" onPress={onLoginPressed}>
+      <Button
+        mode="contained"
+        onPress={onLoginPressed}
+        disabled={loading || email.value.length < 5 || password.value.length < 6}
+      >
         Login
       </Button>
 
