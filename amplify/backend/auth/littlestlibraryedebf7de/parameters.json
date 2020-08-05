@@ -1,6 +1,4 @@
 {
-    "identityPoolName": "littlestlibraryedebf7de_identitypool_edebf7de",
-    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "littleedebf7de",
     "userPoolName": "littlestlibraryedebf7de_userpool_edebf7de",
     "autoVerifiedAttributes": [
@@ -12,7 +10,7 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
+    "emailVerificationSubject": "Littlest Library Verification Code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
@@ -32,7 +30,7 @@
     "userpoolClientSetAttributes": false,
     "sharedId": "edebf7de",
     "resourceName": "littlestlibraryedebf7de",
-    "authSelections": "identityPoolAndUserPool",
+    "authSelections": "userPoolOnly",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -45,7 +43,15 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "manual",
     "userPoolGroupList": [],
-    "dependsOn": []
+    "dependsOn": [],
+    "userPoolGroups": false,
+    "adminQueries": true,
+    "triggers": "{}",
+    "hostedUI": false,
+    "parentStack": {
+        "Ref": "AWS::StackId"
+    },
+    "permissions": []
 }

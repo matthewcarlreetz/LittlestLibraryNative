@@ -1,33 +1,33 @@
 {
-	"api": {
-		"littlestlibrary": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"authConfig": {
-					"defaultAuthentication": {
-						"authenticationType": "API_KEY",
-						"apiKeyConfig": {
-							"apiKeyExpirationDays": 365,
-							"description": "littlestlibraryapikey"
-						}
-					},
-					"additionalAuthenticationProviders": []
-				}
-			}
-		}
-	},
-	"auth": {
-		"littlestlibraryedebf7de": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
-	"storage": {
-		"library": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+    "api": {
+        "littlestlibrary": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "output": {
+                "authConfig": {
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY",
+                        "apiKeyConfig": {
+                            "apiKeyExpirationDays": 365,
+                            "description": "littlestlibraryapikey"
+                        }
+                    },
+                    "additionalAuthenticationProviders": []
+                }
+            }
+        }
+    },
+    "auth": {
+        "littlestlibraryedebf7de": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": []
+        }
+    },
+    "storage": {
+        "library": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation"
+        }
+    }
 }

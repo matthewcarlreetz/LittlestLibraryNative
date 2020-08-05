@@ -9,6 +9,7 @@ import { emailValidator, passwordValidator } from '../../utils/validators';
 import { useTheme } from 'react-native-paper';
 import { goToSignUp } from '../navigation';
 import useAuth from '../../hooks/auth/useAuth';
+import SignupConfirmation from './SignupConfirmation';
 type Props = {
   componentId: string;
 };
@@ -34,7 +35,7 @@ const Login = ({ componentId }: Props): JSX.Element => {
     },
   });
 
-  const { signIn, ...theRest } = useAuth();
+  const { signIn, needsConfirmation, ...theRest } = useAuth();
 
   console.log({ theRest });
 
@@ -56,6 +57,8 @@ const Login = ({ componentId }: Props): JSX.Element => {
 
   return (
     <Background>
+      <SignupConfirmation email={email.value} visible={needsConfirmation} />
+
       <Logo nativeID="logoLogin" />
 
       <Header>Welcome.</Header>

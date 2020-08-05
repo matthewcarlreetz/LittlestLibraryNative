@@ -4,7 +4,7 @@ import { CognitoUser } from 'amazon-cognito-identity-js';
 
 type UserInfo = { username: string; password: string };
 type State = UserInfo & {
-  error: string;
+  error: unknown;
   user: CognitoUser | null | undefined;
   loading: boolean;
   type: 'signIn' | 'signUp';
@@ -109,16 +109,38 @@ const useAuth = () => {
     getUser();
   }, []);
 
-  async function resendConfirmationCode(email: string) {
+  const resendConfirmationCode = async (email: string) => {
     try {
       await Auth.resendSignUp(email);
       console.log('code resent successfully');
+      return true;
     } catch (err) {
       console.log('error resending code: ', err);
+      return false;
     }
-  }
+  };
 
-  return { signUp, signIn, ...state, resendConfirmationCode };
+  const confirmSignUp = async (email: string, authenticationCode: string) => {
+    try {
+      await Auth.confirmSignUp(email, authenticationCode);
+      console.log('successully signed up!');
+      return true;
+    } catch (err) {
+      console.log('error confirming signing up: ', err);
+      return false;
+    }
+  };
+
+  const needsConfirmation = state?.error?.code === 'UserNotConfirmedException';
+
+  return {
+    signUp,
+    signIn,
+    ...state,
+    needsConfirmation,
+    resendConfirmationCode,
+    confirmSignUp,
+  };
 };
 
 export default useAuth;
