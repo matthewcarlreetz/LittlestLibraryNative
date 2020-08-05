@@ -35,7 +35,7 @@ const useAuth = () => {
           password: action.payload.password,
           error: '',
           loading: true,
-          type: 'signUp',
+          type: 'signIn',
         };
       case 'setUser':
         return { ...state, user: action.payload };
@@ -55,10 +55,10 @@ const useAuth = () => {
     type: 'signIn',
   });
 
-  const signIn = async (username: string, password: string) => {
+  const signIn = (username: string, password: string) => {
     dispatch({ type: 'signIn', payload: { username, password } });
   };
-  const signUp = async (username: string, password: string) => {
+  const signUp = (username: string, password: string) => {
     dispatch({ type: 'signUp', payload: { username, password } });
   };
 
@@ -66,16 +66,29 @@ const useAuth = () => {
     async function signUp() {
       if (!state.loading) return;
       try {
-        const op = state.type === 'signIn' ? Auth.signIn : Auth.signUp;
-        const user = await op({
-          username: state.username,
-          password: state.password,
-        });
-        dispatch({ type: 'success', payload: user });
-        console.log({ user });
+        if (state.type === 'signUp') {
+          const response = await Auth.signUp({
+            username: state.username,
+            password: state.password,
+            attributes: {
+              email: state.username,
+            },
+          });
+          console.log({ signUp: response });
+          dispatch({ type: 'success', payload: response.user });
+        } else {
+          const response = await Auth.signIn({
+            username: state.username,
+            password: state.password,
+          });
+          console.log({ signIn: response });
+          dispatch({ type: 'success', payload: response.user });
+          const user = await Auth.currentAuthenticatedUser();
+          console.log({ currentUser: user });
+        }
       } catch (error) {
         dispatch({ type: 'failure', payload: error });
-        console.log('error signIng up:', error);
+        console.log('error', error);
       }
     }
     signUp();
@@ -83,17 +96,29 @@ const useAuth = () => {
 
   useEffect(() => {
     async function getUser() {
+      console.log('GET USER');
       try {
         const user = await Auth.currentAuthenticatedUser();
+        console.log({ currentUser: user });
         dispatch({ type: 'setUser', payload: user });
       } catch (error) {
+        console.log({ error });
         dispatch({ type: 'setUser', payload: null });
       }
     }
     getUser();
   }, []);
 
-  return { signUp, signIn, ...state };
+  async function resendConfirmationCode(email: string) {
+    try {
+      await Auth.resendSignUp(email);
+      console.log('code resent successfully');
+    } catch (err) {
+      console.log('error resending code: ', err);
+    }
+  }
+
+  return { signUp, signIn, ...state, resendConfirmationCode };
 };
 
 export default useAuth;

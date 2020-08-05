@@ -6,30 +6,34 @@ import Header from '../common/Header';
 import Button from '../common/Button';
 import TextInput from '../common/TextInput';
 import BackButton from '../common/BackButton';
-import { emailValidator, passwordValidator, nameValidator } from '../../utils/validators';
+import { emailValidator, passwordValidator } from '../../utils/validators';
 import { useTheme } from 'react-native-paper';
 import { goBack } from '../navigation';
+import useAuth from '../../hooks/auth/useAuth';
 
 type Props = {
   componentId: string;
 };
 
 const SignUp = ({ componentId }: Props): JSX.Element => {
-  const [name, setName] = useState({ value: '', error: '' });
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
-  const _onSignUpPressed = () => {
-    const nameError = nameValidator(name.value);
+  const { signUp, ...theRest } = useAuth();
+
+  console.log({ theRest });
+
+  const onSignUpPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
-    if (emailError || passwordError || nameError) {
-      setName({ ...name, error: nameError });
+    if (emailError || passwordError) {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
       return;
     }
+
+    signUp(email.value, password.value);
   };
 
   const { colors } = useTheme();
@@ -54,18 +58,9 @@ const SignUp = ({ componentId }: Props): JSX.Element => {
     <Background>
       <BackButton goBack={() => goBack(componentId)} />
 
-      <Logo />
+      <Logo nativeID="logoSignup" />
 
       <Header>Create Account</Header>
-
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-      />
 
       <TextInput
         label="Email"
@@ -90,7 +85,7 @@ const SignUp = ({ componentId }: Props): JSX.Element => {
         secureTextEntry
       />
 
-      <Button mode="contained" onPress={_onSignUpPressed} style={styles.button}>
+      <Button mode="contained" onPress={onSignUpPressed} style={styles.button}>
         Sign Up
       </Button>
 

@@ -9,6 +9,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const Logo = () => <Image source={require('../../../assets/logo.png')} style={styles.image} />;
+type Props = {
+  nativeID: string;
+};
+const Logo = ({ nativeID }: Props) => (
+  <Image nativeID={nativeID} source={require('../../../assets/logo.png')} style={styles.image} />
+);
 
 export default memo(Logo);

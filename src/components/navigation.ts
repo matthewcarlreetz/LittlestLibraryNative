@@ -26,6 +26,18 @@ export const goToSignUp = (componentId: string) => {
   Navigation.push(componentId, {
     component: {
       name: 'SignUp',
+      options: {
+        animations: {
+          push: {
+            sharedElementTransitions: [
+              {
+                fromId: 'logoLogin',
+                toId: 'logoSignup',
+              },
+            ],
+          },
+        },
+      },
     },
   });
 };

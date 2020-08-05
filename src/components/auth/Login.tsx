@@ -8,7 +8,7 @@ import TextInput from '../common/TextInput';
 import { emailValidator, passwordValidator } from '../../utils/validators';
 import { useTheme } from 'react-native-paper';
 import { goToSignUp } from '../navigation';
-
+import useAuth from '../../hooks/auth/useAuth';
 type Props = {
   componentId: string;
 };
@@ -34,10 +34,14 @@ const Login = ({ componentId }: Props): JSX.Element => {
     },
   });
 
+  const { signIn, ...theRest } = useAuth();
+
+  console.log({ theRest });
+
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
-  const _onLoginPressed = () => {
+  const onLoginPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
@@ -46,11 +50,13 @@ const Login = ({ componentId }: Props): JSX.Element => {
       setPassword({ ...password, error: passwordError });
       return;
     }
+
+    signIn(email.value, password.value);
   };
 
   return (
     <Background>
-      <Logo />
+      <Logo nativeID="logoLogin" />
 
       <Header>Welcome.</Header>
 
@@ -83,7 +89,7 @@ const Login = ({ componentId }: Props): JSX.Element => {
         </TouchableOpacity>
       </View>
 
-      <Button mode="contained" onPress={_onLoginPressed}>
+      <Button mode="contained" onPress={onLoginPressed}>
         Login
       </Button>
 

@@ -15,8 +15,17 @@ import Geocoder from 'react-native-geocoding';
 import { LocationProvider } from './src/hooks/utils/useLocation';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
+import { MemoryStorageNew } from './src/utils/StorageService.ts';
 
-Amplify.configure(config);
+Amplify.configure({ ...config, storage: MemoryStorageNew });
+// Amplify.configure({
+//   Auth:{
+//     region: ...,
+//     userPoolId: ...,
+//     userPoolWebClientId: ...,
+//     storage: MemoryStorageNew
+//   }
+// });
 
 Geocoder.init(GOOGLE_LOCATION_API_KEY);
 

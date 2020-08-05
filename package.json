@@ -10,6 +10,7 @@
         "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
     },
     "dependencies": {
+        "@react-native-community/async-storage": "^1.11.0",
         "@react-native-community/netinfo": "^5.9.5",
         "amazon-cognito-identity-js": "^4.3.3",
         "aws-amplify": "^3.0.22",
