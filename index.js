@@ -12,20 +12,11 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GOOGLE_LOCATION_API_KEY } from 'react-native-dotenv';
 import Geocoder from 'react-native-geocoding';
-import { LocationProvider } from './src/hooks/utils/useLocation';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
 import { MemoryStorageNew } from './src/utils/StorageService.ts';
 
 Amplify.configure({ ...config, storage: MemoryStorageNew });
-// Amplify.configure({
-//   Auth:{
-//     region: ...,
-//     userPoolId: ...,
-//     userPoolWebClientId: ...,
-//     storage: MemoryStorageNew
-//   }
-// });
 
 Geocoder.init(GOOGLE_LOCATION_API_KEY);
 
@@ -40,13 +31,11 @@ const theme = {
 };
 
 const ViewWrapper = (Component) => () => (props) => (
-  <LocationProvider>
-    <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <Component {...props} />
-      </PaperProvider>
-    </SafeAreaProvider>
-  </LocationProvider>
+  <SafeAreaProvider>
+    <PaperProvider theme={theme}>
+      <Component {...props} />
+    </PaperProvider>
+  </SafeAreaProvider>
 );
 
 Navigation.registerComponent('LibraryMap', ViewWrapper(LibraryMap), () => LibraryMap);

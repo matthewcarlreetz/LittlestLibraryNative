@@ -6,7 +6,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
-import { useLocationProvider } from '../../hooks/utils/useLocation';
+import useLocation from '../../hooks/utils/useLocation';
 import useGetLibraries from '../../hooks/libraries/useGetLibraries';
 import { Library } from '../../models';
 import haversine from '../../utils/haversine';
@@ -20,13 +20,16 @@ const KM_TO_MILES = 0.621371;
 type LibraryWithDistance = Library & { distance: number };
 
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
-  const coords = useLocationProvider();
+  const coords = useLocation();
+  console.log({ coords });
   const { libraries } = useGetLibraries();
   const [librariesWithDist, setLibrariesWithDist] = useState<LibraryWithDistance[]>([]);
+  console.log({ libraries, librariesWithDist });
 
   useEffect(() => {
     if (!coords) return;
 
+    console.log('RUNING WITH DISTANCE');
     const withDist = libraries.map((l) => {
       const distance = haversine(l.latitude, l.longitude, coords.latitude, coords.longitude);
       return { ...l, distance };

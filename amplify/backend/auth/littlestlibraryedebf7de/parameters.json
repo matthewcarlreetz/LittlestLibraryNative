@@ -1,4 +1,6 @@
 {
+    "identityPoolName": "littlestlibraryedebf7de_identitypool_32925f19",
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "littleedebf7de",
     "userPoolName": "littlestlibraryedebf7de_userpool_edebf7de",
     "autoVerifiedAttributes": [
@@ -30,7 +32,7 @@
     "userpoolClientSetAttributes": false,
     "sharedId": "edebf7de",
     "resourceName": "littlestlibraryedebf7de",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",

@@ -6,7 +6,7 @@ import Geocoder from 'react-native-geocoding';
 import GoogleAddressParser, { Address } from '../../utils/GoogleAddressParser';
 import OkDialog from '../common/OkDialog';
 import { Navigation } from 'react-native-navigation';
-import { useLocationProvider } from '../../hooks/utils/useLocation';
+import useLocation from '../../hooks/utils/useLocation';
 import useCreateLibrary from '../../hooks/libraries/useCreateLibrary';
 import { Library, LibraryStatus } from '../../models/';
 import { uploadToStorage } from '../../utils/Images';
@@ -17,7 +17,7 @@ type CreateLibraryProps = {
 
 const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
   const win = Dimensions.get('window');
-  const coords = useLocationProvider();
+  const coords = useLocation();
   const { createLib, loading, error, finished } = useCreateLibrary();
   const [address, setAddress] = useState<Address | null>(null);
   const [dialogIsShowing, setDialogIsShowing] = useState<boolean>(false);
