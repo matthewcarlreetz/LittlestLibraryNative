@@ -32,8 +32,6 @@ const initialState = {
 
 const useAuth = () => {
   function reducer(state: State, action: Action): State {
-    console.log({ action });
-    console.log({ state });
     switch (action.type) {
       case 'signUp':
         return {
@@ -88,21 +86,16 @@ const useAuth = () => {
               email: state.username,
             },
           });
-          console.log({ signUp: response });
           dispatch({ type: 'success', payload: response.user });
         } else {
           const response = await Auth.signIn({
             username: state.username,
             password: state.password,
           });
-          console.log({ signIn: response });
           dispatch({ type: 'success', payload: response.user });
-          const user = await Auth.currentAuthenticatedUser();
-          console.log({ currentUser: user });
         }
       } catch (error) {
         dispatch({ type: 'failure', payload: error });
-        console.log('error', error);
       }
     }
     signUp();
@@ -110,13 +103,10 @@ const useAuth = () => {
 
   useEffect(() => {
     async function getUser() {
-      console.log('GET USER');
       try {
         const user = await Auth.currentAuthenticatedUser();
-        console.log({ currentUser: user });
         dispatch({ type: 'setUser', payload: user });
       } catch (error) {
-        console.log({ error });
         dispatch({ type: 'setUser', payload: null });
       }
     }
@@ -126,10 +116,8 @@ const useAuth = () => {
   const resendConfirmationCode = async (email: string) => {
     try {
       await Auth.resendSignUp(email);
-      console.log('code resent successfully');
       return true;
     } catch (err) {
-      console.log('error resending code: ', err);
       return false;
     }
   };
@@ -137,10 +125,8 @@ const useAuth = () => {
   const confirmSignUp = async (email: string, authenticationCode: string) => {
     try {
       await Auth.confirmSignUp(email, authenticationCode);
-      console.log('successully signed up!');
       return true;
     } catch (err) {
-      console.log('error confirming signing up: ', err);
       return false;
     }
   };

@@ -28,7 +28,6 @@ const useGetLibraries = (coords: GeoCoordinates | null) => {
   useEffect(() => {
     async function getLibraries() {
       const libs = await DataStore.query(Library);
-      console.log('QUERY_LIBRARIES_RESULT', libs);
       const libsWithData = await libsWithDistanceAndUrl(libs);
       setLibraries(libsWithData);
     }

@@ -9,6 +9,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import useLocation from '../../hooks/utils/useLocation';
 import useGetLibraries, { LibraryWithData } from '../../hooks/libraries/useGetLibraries';
 import { Library } from '../../models';
+import { Auth } from 'aws-amplify';
+import { useAsync } from 'react-async';
+import { getS3SignedHeaders } from '../../utils/Images';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -16,11 +19,12 @@ type LibraryListScreenProps = {
 
 const KM_TO_MILES = 0.621371;
 
+const credentials = async () => await Auth.essentialCredentials(await Auth.currentCredentials());
+
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const coords = useLocation();
   const libraries = useGetLibraries(coords);
-
-  console.log(JSON.stringify({ libraries }, null, 2));
+  const { data: creds } = useAsync({ promiseFn: credentials });
 
   useNavigationButtonPress(() => {
     ImagePicker.openCamera({
@@ -42,6 +46,12 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   });
 
   const renderItem = (data: { item: LibraryWithData }): JSX.Element => {
+    const source = { uri: '', priority: FastImage.priority.normal, headers: {} };
+    if (data.item.imageUrl && creds) {
+      source.uri = data.item.imageUrl.split('?')[0];
+      source.headers = getS3SignedHeaders(source.uri, creds);
+    }
+
     return (
       <List.Item
         title={data.item.address}
@@ -73,10 +83,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
           <FastImage
             {...props}
             style={{ ...style, width: 80, height: 80, borderRadius: 40 }}
-            source={{
-              uri: data.item.imageUrl ?? '',
-              priority: FastImage.priority.normal,
-            }}
+            source={source}
             resizeMode={FastImage.resizeMode.contain}
           />
         )}

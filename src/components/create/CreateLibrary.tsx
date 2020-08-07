@@ -32,7 +32,6 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
 
   useEffect(() => {
     //reverse geocode
-    console.log({ coords });
     if (coords != null) {
       Geocoder.from(coords.latitude, coords.longitude)
         .then((json) => {
@@ -85,7 +84,6 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
           onPress={async () => {
             if (coords != null && address != null) {
               const avatarUuid = uuidv4();
-              console.log('SEND IT!');
 
               const success = await upload(avatarUuid, image.path);
 

@@ -16,6 +16,7 @@ import Amplify from 'aws-amplify';
 import config from './aws-exports';
 import { MemoryStorageNew } from './src/utils/StorageService.ts';
 import 'react-native-get-random-values';
+import 'react-native-url-polyfill/auto';
 
 Amplify.configure({ ...config, storage: MemoryStorageNew });
 
