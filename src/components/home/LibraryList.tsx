@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import { FlatList, Text, View } from 'react-native';
 import { List, Divider, useTheme } from 'react-native-paper';
@@ -7,9 +7,8 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import ImagePicker from 'react-native-image-crop-picker';
 import useLocation from '../../hooks/utils/useLocation';
-import useGetLibraries from '../../hooks/libraries/useGetLibraries';
+import useGetLibraries, { LibraryWithData } from '../../hooks/libraries/useGetLibraries';
 import { Library } from '../../models';
-import haversine from '../../utils/haversine';
 
 type LibraryListScreenProps = {
   componentId: string;
@@ -17,25 +16,11 @@ type LibraryListScreenProps = {
 
 const KM_TO_MILES = 0.621371;
 
-type LibraryWithDistance = Library & { distance: number };
-
 const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
   const coords = useLocation();
-  console.log({ coords });
-  const { libraries } = useGetLibraries();
-  const [librariesWithDist, setLibrariesWithDist] = useState<LibraryWithDistance[]>([]);
-  console.log({ libraries, librariesWithDist });
+  const libraries = useGetLibraries(coords);
 
-  useEffect(() => {
-    if (!coords) return;
-
-    console.log('RUNING WITH DISTANCE');
-    const withDist = libraries.map((l) => {
-      const distance = haversine(l.latitude, l.longitude, coords.latitude, coords.longitude);
-      return { ...l, distance };
-    });
-    setLibrariesWithDist(withDist);
-  }, [coords, libraries]);
+  console.log(JSON.stringify({ libraries }, null, 2));
 
   useNavigationButtonPress(() => {
     ImagePicker.openCamera({
@@ -56,7 +41,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
     });
   });
 
-  const renderItem = (data: { item: LibraryWithDistance }): JSX.Element => {
+  const renderItem = (data: { item: LibraryWithData }): JSX.Element => {
     return (
       <List.Item
         title={data.item.address}
@@ -81,7 +66,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
               alignItems: 'flex-end',
             }}
           >
-            <Text {...props}>{`${(data.item.distance * KM_TO_MILES).toFixed(1)} mi`}</Text>
+            {data.item.distance && <Text {...props}>{`${(data.item.distance * KM_TO_MILES).toFixed(1)} mi`}</Text>}
           </View>
         )}
         left={({ style, ...props }): JSX.Element => (
@@ -89,7 +74,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
             {...props}
             style={{ ...style, width: 80, height: 80, borderRadius: 40 }}
             source={{
-              uri: data.item.thumbnail,
+              uri: data.item.imageUrl ?? '',
               priority: FastImage.priority.normal,
             }}
             resizeMode={FastImage.resizeMode.contain}
@@ -111,7 +96,7 @@ const LibraryList = ({ componentId }: LibraryListScreenProps): JSX.Element => {
       ItemSeparatorComponent={Divider}
       renderItem={renderItem}
       keyExtractor={(library: Library): string => library.id.toString()}
-      data={librariesWithDist}
+      data={libraries}
     />
   );
 };

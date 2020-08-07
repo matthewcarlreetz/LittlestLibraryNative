@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { useNavigationButtonPress } from 'react-native-navigation-hooks';
 import useGetLibraries from '../../hooks/libraries/useGetLibraries';
+import useLocation from '../../hooks/utils/useLocation';
 
 type LibraryMapScreenProps = {
   componentId: string;
@@ -10,7 +11,8 @@ type LibraryMapScreenProps = {
 // Leaving this here for future reference
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LibraryMapScreen = ({ componentId }: LibraryMapScreenProps): JSX.Element => {
-  const { libraries } = useGetLibraries();
+  const coords = useLocation();
+  const libraries = useGetLibraries(coords);
 
   useNavigationButtonPress((e) => {
     console.log(`Pressed ${e.buttonId} on componentId: ${e.componentId}`);

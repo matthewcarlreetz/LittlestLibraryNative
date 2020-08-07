@@ -9,7 +9,9 @@ import { Navigation } from 'react-native-navigation';
 import useLocation from '../../hooks/utils/useLocation';
 import useCreateLibrary from '../../hooks/libraries/useCreateLibrary';
 import { Library, LibraryStatus } from '../../models/';
-import { uploadToStorage } from '../../utils/Images';
+import { upload } from '../../utils/Images';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 type CreateLibraryProps = {
   image: Image;
@@ -80,9 +82,15 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
           labelStyle={{ fontSize: 20, color: 'white' }}
           disabled={!address || loading}
           mode="contained"
-          onPress={(): void => {
+          onPress={async () => {
             if (coords != null && address != null) {
+              const avatarUuid = uuidv4();
               console.log('SEND IT!');
+
+              const success = await upload(avatarUuid, image.path);
+
+              if (!success) return;
+
               const lib = new Library({
                 latitude: coords.latitude,
                 longitude: coords.longitude,
@@ -91,13 +99,10 @@ const CreateLibrary = ({ image }: CreateLibraryProps): JSX.Element => {
                 state: address.state,
                 zip: address.zip,
                 status: LibraryStatus.NEW,
+                avatar: avatarUuid,
               });
 
               createLib(lib);
-
-              // TODO: User must be logged in to upload.
-              // TODO: Generate identifier and store on library
-              uploadToStorage('asdf', image.path);
             }
           }}
         >

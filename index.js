@@ -15,6 +15,7 @@ import Geocoder from 'react-native-geocoding';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
 import { MemoryStorageNew } from './src/utils/StorageService.ts';
+import 'react-native-get-random-values';
 
 Amplify.configure({ ...config, storage: MemoryStorageNew });
 
